@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Countdown from "react-countdown";
 import { Button, CircularProgress, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import { FiSettings } from "react-icons/fi";
 
 import * as anchor from "@project-serum/anchor";
 
@@ -166,47 +167,67 @@ const Home = (props: HomeProps) => {
   ]);
 
   return (
-    <main>
-      {wallet && (
-        <p>Wallet {shortenAddress(wallet.publicKey.toBase58() || "")}</p>
-      )}
+    <main className="container mx-auto mt-4">
+      <div
+        className="interface bg-gray-800 rounded-2xl w-full mx-auto"
+        style={{ maxWidth: 400, padding: 6 }}
+      >
+        <div className="flex items-center justify-between text-lg font-semibold px-4 py-2">
+          Mint
+          <FiSettings size="1.25rem" />
+        </div>
 
-      {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
+        <div className="px-4">
+          {wallet && (
+            <p>Wallet {shortenAddress(wallet.publicKey.toBase58() || "")}</p>
+          )}
 
-      {wallet && <p>Total Available: {itemsAvailable}</p>}
+          {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
 
-      {wallet && <p>Redeemed: {itemsRedeemed}</p>}
+          {wallet && <p>Total Available: {itemsAvailable}</p>}
 
-      {wallet && <p>Remaining: {itemsRemaining}</p>}
+          {wallet && <p>Redeemed: {itemsRedeemed}</p>}
 
-      <MintContainer>
-        {!wallet ? (
-          <ConnectButton>Connect Wallet</ConnectButton>
-        ) : (
-          <MintButton
-            disabled={isSoldOut || isMinting || !isActive}
-            onClick={onMint}
-            variant="contained"
-          >
-            {isSoldOut ? (
-              "SOLD OUT"
-            ) : isActive ? (
-              isMinting ? (
-                <CircularProgress />
-              ) : (
-                "MINT"
-              )
-            ) : (
-              <Countdown
-                date={startDate}
-                onMount={({ completed }) => completed && setIsActive(true)}
-                onComplete={() => setIsActive(true)}
-                renderer={renderCounter}
-              />
-            )}
-          </MintButton>
-        )}
-      </MintContainer>
+          {wallet && <p>Remaining: {itemsRemaining}</p>}
+        </div>
+
+        <MintContainer>
+          {!wallet ? (
+            <ConnectButton
+              fullWidth
+              className="w-full text-center justify-center flex"
+              style={{ justifyContent: "center !important" }}
+            >
+              Connect Wallet
+            </ConnectButton>
+          ) : (
+            <div className="mx-4 mt-2 mb-4">
+              <MintButton
+                disabled={isSoldOut || isMinting || !isActive}
+                onClick={onMint}
+                variant="contained"
+              >
+                {isSoldOut ? (
+                  "SOLD OUT"
+                ) : isActive ? (
+                  isMinting ? (
+                    <CircularProgress />
+                  ) : (
+                    "MINT"
+                  )
+                ) : (
+                  <Countdown
+                    date={startDate}
+                    onMount={({ completed }) => completed && setIsActive(true)}
+                    onComplete={() => setIsActive(true)}
+                    renderer={renderCounter}
+                  />
+                )}
+              </MintButton>
+            </div>
+          )}
+        </MintContainer>
+      </div>
 
       <Snackbar
         open={alertState.open}
